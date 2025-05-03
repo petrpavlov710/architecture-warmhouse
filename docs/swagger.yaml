@@ -1,0 +1,704 @@
+openapi: 3.0.0
+info:
+  title: API проекта 'Умный дом'
+  version: 1.0.0
+  description: API для работы с устройствами, пользователями, домами и телеметрией.
+security:
+  - BearerAuth: []
+paths:
+  /device_types:
+    post:
+      tags:
+        - DeviceType
+      summary: Создание нового типа для устройств
+      description: Создает новый тип в системе.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceType'
+            example:
+              name: "Датчик температуры"
+              description: "Беспроводной датчик температуры в столовой"
+      responses:
+        '201':
+          description: Устройство успешно добавлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceType'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - DeviceType
+      summary: Получение списка типов для устройств
+      description: Получает список всех типов для устройств в системе.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список типов для устройств успешно получен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Общее количество типов для устройств
+                    example: 156
+                  next:
+                    type: string
+                    description: Следующая страница
+                    example: "/device_types/?page=4"
+                  previous:
+                    type: string
+                    description: Предыдущая страница
+                    example: "/device_types/?page=2"
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceType'
+                example:
+                  count: 156
+                  next: "/device_types/?page=4"
+                  previous: "/device_types/?page=2"
+                  results:
+                    - id: "5ffbc64767cb422b9655cb8b4c4666e1"
+                      name: "Датчик температуры"
+                      description: "Беспроводной датчик температуры в столовой"
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /device_types/{id}:
+    get:
+      tags:
+        - DeviceType
+      summary: Получение информации о типе устройства
+      description: Получает информацию о типе по UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID типа устройства
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Тип устройства успешно получен
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - DeviceType
+      summary: Обновление информации и типе устройства
+      description: Обновляет информацию о типе устройства по UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID типа устройства
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+            example:
+              name: "Датчик температуры"
+              description: "Беспроводной датчик температуры в столовой"
+      responses:
+        '201':
+          description: Тип устройства успешно обновлен
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - DeviceType
+      summary: Удаление типа устройства
+      description: Удаляет тип устройства по UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID типа устройства
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Тип устройства успешно удален
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /devices:
+    post:
+      tags:
+        - Device
+      summary: Добавление нового устройства
+      description: Создает новое устройство в системе.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+            example:
+              location_id: "5ffbc64767cb422b9655cb8b4c4666e1"
+              type_id: "5ffbc64767cb422b9655cb8b4c4666e2"
+              name: "Датчик температуры"
+              description: "Беспроводной датчик температуры в столовой"
+      responses:
+        '201':
+          description: Устройство успешно добавлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Device
+      summary: Получение списка устройств
+      description: Получает список всех устройств
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список устройств успешно получен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Общее количество устройств
+                    example: 156
+                  next:
+                    type: string
+                    description: Следующая страница
+                    example: "/devices/?page=4"
+                  previous:
+                    type: string
+                    description: Предыдущая страница
+                    example: "/devices/?page=2"
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                example:
+                  count: 156
+                  next: "/devices/?page=4"
+                  previous: "/devices/?page=2"
+                  results:
+                    - id: "5ffbc64767cb422b9655cb8b4c4666e1"
+                      user_id: "5ffbc64767cb422b9655cb8b4c4666e3"
+                      location_id: "5ffbc64767cb422b9655cb8b4c4666e2"
+                      type_id: "5ffbc64767cb422b9655cb8b4c4666e4"
+                      name: "Датчик температуры"
+                      description: "Беспроводной датчик температуры в столовой"
+                      is_active: True
+                      created_at: "2023-10-01T12:00:00Z"
+                      updated_at: "2023-10-01T12:00:00Z"
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /devices/{id}:
+    get:
+      tags:
+        - Device
+      summary: Получение информации об устройстве
+      description: Получает информацию об устройстве по UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID устройства
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Устройство успешно получено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Device
+      summary: Обновление информации об устройстве
+      description: Обновляет информацию об устройстве по UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID устройства
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+            example:
+              location_id: "5ffbc64767cb422b9655cb8b4c4666e1"
+              type_id: "5ffbc64767cb422b9655cb8b4c4666e2"
+              name: "Датчик температуры"
+              description: "Беспроводной датчик температуры в столовой"
+      responses:
+        '201':
+          description: Устройство успешно обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Device
+      summary: Удаление устройства
+      description: Удаляет устройство по его UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID устройства
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Устройство успешно удалено
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /locations:
+    post:
+      tags:
+        - Location
+      summary: Добавление новой локации
+      description: Создает новую локацию в системе.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+            example:
+              name: "Столовая"
+              description: "Столовая на даче"
+      responses:
+        '201':
+          description: Локация успешно добавлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Location
+      summary: Получение списка локаций
+      description: Получает список всех локаций.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список локаций успешно получен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Общее количество локаций
+                    example: 156
+                  next:
+                    type: string
+                    description: Следующая страница
+                    example: "/devices/?page=4"
+                  previous:
+                    type: string
+                    description: Предыдущая страница
+                    example: "/devices/?page=2"
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Location'
+                example:
+                  count: 156
+                  next: "/locations/?page=4"
+                  previous: "/locations/?page=2"
+                  results:
+                    - id: "5ffbc64767cb422b9655cb8b4c4666e1"
+                      user_id: "5ffbc64767cb422b9655cb8b4c4666e2"
+                      name: "Столовая"
+                      description: "Столовая на даче"
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /locations/{id}:
+    get:
+      tags:
+        - Location
+      summary: Получение информации о локации
+      description: Получает информацию о локации по UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID локации
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Локация успешно получена
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Location
+      summary: Обновление информации о локации
+      description: Обновление информации о локации по UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID локации
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+            example:
+              name: "Столовая"
+              description: "Столовая на даче"
+      responses:
+        '204':
+          description: Локация успешно обновлена
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Location
+      summary: Удаление локации
+      description: Удаляет локацию UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID локации
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Локация успешно удалена
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /locations/{id}/devices:
+    get:
+      tags:
+        - Location
+      summary: Получение списка устройств в локации
+      description: Получает список всех устройств в указанной локации.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID локации
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Список устройств успешно получен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Общее количество устройств в локации
+                    example: 12
+                  next:
+                    type: string
+                    description: Следующая страница
+                    example: "/locations/{id}/devices/?page=4"
+                  previous:
+                    type: string
+                    description: Предыдущая страница
+                    example: "/locations/{id}/devices/?page=2"
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                example:
+                  count: 156
+                  next: "/locations/{id}/devices/?page=4"
+                  previous: "/locations/{id}/devices/?page=2"
+                  results:
+                    - id: "5ffbc64767cb422b9655cb8b4c4666e1"
+                      user_id: "5ffbc64767cb422b9655cb8b4c4666e3"
+                      location_id: "5ffbc64767cb422b9655cb8b4c4666e2"
+                      type_id: "5ffbc64767cb422b9655cb8b4c4666e4"
+                      name: "Датчик температуры"
+                      description: "Беспроводной датчик температуры в столовой"
+                      is_active: True
+                      created_at: "2023-10-01T12:00:00Z"
+                      updated_at: "2023-10-01T12:00:00Z"
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Location:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        parent_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        location_id:
+          type: string
+          format: uuid
+        type_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        schedule:
+          type: object
+          format: json
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    DeviceType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

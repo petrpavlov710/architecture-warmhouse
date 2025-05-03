@@ -1,0 +1,21 @@
+@startuml to-be component monitoring
+title Диаграмма компонентов микросервиса "Управление пользователями"
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHome, "Система 'Умный дом'") {
+  Container(Users, "Управление пользователями", "Python", "Управляет учетными записями пользователей")
+}
+
+Container(Users, "Управление пользователями", "Python", "Управляет учетными записями пользователей") {
+  Component(RequestHandler, "RequestHandler", "FastAPI", "Обрабатывает запросы, связанные с учетной записью")
+  Component(UserService, "UserService", "Python", "Бизнес-логика: регистрация, авторизация, изменение профиля и пр")
+  Component(RepositoryLayer, "RepositoryLayer", "SQLAlchemy", "Работает с базой данных системы")
+}
+
+ContainerDb(Database, "БД", "PostgreSQL", "Хранит данные системы")
+
+Rel(RequestHandler, UserService, "Вызывает бизнес логику")
+Rel(UserService, RepositoryLayer, "Запрашивает/изменяет данные")
+Rel(RepositoryLayer, Database, "Чтение/Запись", "SQL")
+@enduml

@@ -1,0 +1,24 @@
+@startuml to-be component monitoring
+title Диаграмма компонентов микросервиса "Мониторинг устройств"
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHome, "Система 'Умный дом'") {
+  Container(DeviceMonitoring, "Мониторинг устройств", "Python", "Считывает информацию с устройств пользователей")
+}
+
+Container(DeviceMonitoring, "Мониторинг устройств", "Python", "Считывает информацию с устройств пользователей") {
+  Component(DataHandler, "DataHandler", "FastAPI", "Принимает данные с устройства")
+  Component(MonitoringService, "MonitoringService", "Python", "Бизнес-логика обработки данных устройства: анализ, агрегация, и пр")
+  Component(RepositoryLayer, "RepositoryLayer", "SQLAlchemy", "Работает с базой данных системы")
+}
+
+Container_Ext(Device, "Устройство 'Умного дома'", "", "Контроллирует значение и управляет физической величиной/объектом")
+
+ContainerDb(Database, "БД", "PostgreSQL", "Хранит данные системы")
+
+Rel(Device, DataHandler, "Отправляет данные устройства", "HTTPS")
+Rel(DataHandler, MonitoringService, "Вызывает бизнес логику")
+Rel(MonitoringService, RepositoryLayer, "Запрашивает/изменяет данные")
+Rel(RepositoryLayer, Database, "Чтение/Запись", "SQL")
+@enduml

@@ -1,0 +1,61 @@
+@startuml
+
+entity "User" as user {
+    * id: UUID
+    --
+    first_name: string
+    last_name: string
+    email: string
+    created_at: datetime
+}
+
+entity "Location" as location {
+    * id: UUID
+    --
+    parent_id: UUID
+    user_id: UUID
+    name: string
+    description: string
+}
+
+entity "Device Type" as device_type {
+    * id: UUID
+    --
+    name: string
+    description: string
+}
+
+entity "Device" as device {
+    * id: UUID
+    --
+    user_id: UUID
+    location_id: UUID
+    type_id: UUID
+    name: string
+    description: string
+    schedule: string
+    created_at: datetime
+    updated_at: datetime
+}
+
+entity "Telemetry" as telemetry {
+    * id: UUID
+    --
+    device_id: UUID
+    status: string
+    timestamp: datetime
+    unit: string
+    value: float
+    power_usage: float
+}
+
+
+
+user --o{ location
+location --o{ location
+location --o{ device
+device_type --o{ device
+device --o{ telemetry
+
+
+@enduml
