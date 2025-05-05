@@ -13,10 +13,10 @@ def get_location_by_sensor_id(id: str) -> str:
 def get_sensor_id_by_location(location: str) -> int:
     match location:
         case "Living Room":
-            return 1
+            return "1"
         case "Bedroom":
-            return 2
+            return "2"
         case "Kitchen":
-            return 3
+            return "3"
         case _:
-            return 0
+            return "0"
