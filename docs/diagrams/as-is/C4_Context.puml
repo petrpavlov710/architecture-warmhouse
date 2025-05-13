@@ -1,0 +1,17 @@
+@startuml as-is warmhouse
+title Диаграмма контекста монолитного приложения "Теплый дом"
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "Пользователь", "Пользователь системы 'Теплый дом'")
+Person(serviceman, "Сервисный инженер", "Выездной специалист по установке и настройке системы пользователю")
+
+System(WarmHouseSystem, "Теплый дом", "Система управления отоплением и мониторинга температуры с датчиков")
+
+System_Ext(HeatingSystem, "Ситема отопления", "Внешняя система отопления дома пользователя")
+
+Rel(user, WarmHouseSystem, "Отправляет команды на включение/выключение отопления, запрашивает показания датчиков температуры", "HTTP/HTTPS")
+Rel(serviceman, WarmHouseSystem, "Отправляет команды на привязку системы отопления к системе, регистрирует датчики в системе", "HTTP/HTTPS")
+Rel(WarmHouseSystem, HeatingSystem, "Управляет включением/выключением, запрашивает данные датчиков температуры", "HTTP/HTTPS")
+
+@enduml

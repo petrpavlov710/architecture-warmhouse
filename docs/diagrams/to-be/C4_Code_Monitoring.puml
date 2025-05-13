@@ -1,0 +1,36 @@
+@startuml to-be code monitoring
+title Диаграмма кода микросервиса "Мониторинг устройств"
+
+class MonitoringService {
+    +get_devices(): List[Device]
+    +get_device(device_id: str): Device
+    +get_unit(device_id: str): str
+    +get_value(device_id: str): flaot
+    +get_status(device_id: str): str
+    +get_house(device_id: str): str
+    +get_owner_id(device_id: str): str
+    +get_type_id(device_id: str): str
+}
+
+class RepositoryLayer {
+    +get_devices(): List[Device]
+    +get_device(device_id: str): Device
+    +save_device(device: Device): Device
+    +delete_device(device_id: str): Device
+}
+
+class Device {
+    -id: str
+    -type_id: str
+    -status: str
+    -unit: str
+    -value: float
+    -house: str
+    -owner_id: str
+    +get_status(): str
+    +get_value(): float
+}
+
+MonitoringService --> RepositoryLayer : использует
+MonitoringService --> Device : получает информацию
+@enduml

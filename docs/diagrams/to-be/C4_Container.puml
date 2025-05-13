@@ -1,0 +1,40 @@
+@startuml to-be container
+title Диаграмма контейнеров микросервисного приложения "Умный дом"
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(User, "Пользователь", "Пользователь системы 'Умный дом'")
+Person(Support, "Специалист поддержки", "Продоставляет поддержку пользователям")
+
+System_Boundary(SmartHome, "Система 'Умный дом'") {
+    Container(WebApp, "Web-приложение", "React", "Веб-приложение для управления и мониторинга системой")
+    Container(Proxy, "Proxy", "Nginx", "Перенаправляет запросы к микросервисам")
+    Container(Users, "Управление пользователями", "Python", "Управляет учетными записями пользователей")
+    Container(DeviceControl, "Управление устройствами", "Python", "Управляет устройствами пользователей")
+    Container(DeviceMonitoring, "Мониторинг устройств", "Python", "Считывает информацию с устройств пользователей")
+
+    ContainerDb(Database, "БД", "PostgreSQL", "Хранит данные системы")
+
+    ContainerQueue(QueueMessage, "Очередь сообщений", "RabbitMQ", "Передача сообщений между системой управления и устройствами")
+
+    Rel(User, WebApp, "Работает с системой", "HTTPS")
+    Rel(Support, WebApp, "Работает с системой", "HTTPS")
+
+    Rel(WebApp, Proxy, "Запрашивает/изменяет данные", "REST API, HTTPS")
+
+    Rel(Proxy, Users, "Запрашивает/изменяет данные", "HTTPS")
+    Rel(Proxy, DeviceControl, "Запрашивает/изменяет данные", "HTTPS")
+    Rel(Proxy, DeviceMonitoring, "Запрашивает/изменяет данные", "HTTPS")
+
+    Rel(DeviceMonitoring, Database, "Чтение/Запись", "SQL")
+    Rel(DeviceControl, Database, "Чтение/Запись", "SQL")
+    Rel(Users, Database, "Чтение/Запись", "SQL")
+
+    Rel(DeviceControl, QueueMessage, "Отправляет команды управления устройством", "HTTPS")
+    Rel(DeviceMonitoring, QueueMessage, "Запрашивает информацию с устроства", "HTTPS")
+}
+
+Container_Ext(Device, "Устройство 'Умного дома'", "", "Контроллирует значение и управляет физической величиной/объектом")
+Rel(QueueMessage, Device, "Отправляет команды управления", "HTTPS")
+Rel(Device, QueueMessage, "Отправляет фактические значения", "HTTPS")
+@enduml

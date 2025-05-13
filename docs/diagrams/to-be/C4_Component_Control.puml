@@ -1,0 +1,24 @@
+@startuml to-be component control
+title Диаграмма компонентов микросервиса "Управление устройствами"
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHome, "Система 'Умный дом'") {
+  Container(DeviceControl, "Управление устройствами", "Python", "Управляет устройствами пользователей")
+}
+
+Container(DeviceControl, "Управление устройствами", "Python", "Управляет устройствами пользователей") {
+  Component(RequestHandler, "RequestHandler", "FastAPI", "Обрабатывает запросы на управление устройством")
+  Component(DeviceController, "DeviceController", "Python", "Бизнес-логика управления устройством: конфигурирование, управление")
+  Component(RepositoryLayer, "RepositoryLayer", "SQLAlchemy", "Работает с базой данных системы")
+}
+
+Container_Ext(Device, "Устройство 'Умного дома'", "", "Контроллирует значение и управляет физической величиной/объектом")
+
+ContainerDb(Database, "БД", "PostgreSQL", "Хранит данные системы")
+
+Rel(RequestHandler, DeviceController, "Вызывает бизнес логику")
+Rel(DeviceController, RepositoryLayer, "Запрашивает/изменяет данные")
+Rel(DeviceController, Device, "Отправляет команды управления", "HTTPS")
+Rel(RepositoryLayer, Database, "Чтение/Запись", "SQL")
+@enduml

@@ -1,0 +1,61 @@
+@startuml to-be ER
+
+entity User {
+    * id: UUID
+    --
+    first_name: string
+    last_name: string
+    email: string
+    phone: string
+    created_at: datetime
+    is_active: bool
+    is_staff: bool
+}
+
+entity Location {
+    * id: UUID
+    --
+    user_id: UUID
+    name: string
+    description: string
+}
+
+entity DeviceType {
+    * id: UUID
+    --
+    name: string
+    description: string
+}
+
+entity Device {
+    * id: UUID
+    --
+    user_id: UUID
+    house_id: UUID
+    type_id: UUID
+    name: string
+    description: string
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+}
+
+entity Telemetry {
+    * id: UUID
+    --
+    device_id: UUID
+    status: string
+    unit: string
+    value: float
+    updated_at: datetime
+}
+
+
+
+User --o{ Location
+Location --o{ Device
+DeviceType --o{ Device
+Device --o{ Telemetry
+
+
+@enduml
